@@ -1,10 +1,6 @@
 name: Scrape Football Data and Upload to MotherDuck
 
-on:
-  # Run on schedule (daily at 6 AM UTC)
-  schedule:
-    - cron: '0 6 * * *'
-  
+on:  
   # Allow manual trigger
   workflow_dispatch:
     inputs:
