@@ -6,9 +6,37 @@ A data pipeline for collecting and analyzing football data.
 
 ```
 football-analytics/
+├── .github/workflows/   # GitHub Actions for automated scraping
 ├── data_collection/     # Python scripts for web scraping
 ├── data_transform/      # dbt models for data transformation
 └── data/               # Local data storage (gitignored)
+```
+
+## Quick Start
+
+### Option 1: GitHub Actions (Automated - Recommended)
+
+The easiest way to scrape and upload data automatically:
+
+1. **Set up:** Add your `MOTHERDUCK_TOKEN` to GitHub Secrets
+2. **Run:** Trigger workflow manually or let it run on schedule
+3. **Query:** Access data in MotherDuck
+
+See [docs/GITHUB_ACTIONS_SETUP.md](docs/GITHUB_ACTIONS_SETUP.md) for detailed instructions.
+
+### Option 2: Run Locally
+
+```bash
+# Setup
+cd data_collection
+pip install -r requirements.txt
+
+# Configure (optional)
+cp ../.env.example ../.env
+# Edit .env with your MOTHERDUCK_TOKEN
+
+# Run scraper
+python scrapers/fbref_scraper.py
 ```
 
 ## Data Collection
