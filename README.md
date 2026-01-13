@@ -22,6 +22,10 @@ The easiest way to scrape and upload data automatically:
 2. **Run:** Trigger workflow manually or let it run on schedule
 3. **Query:** Access data in MotherDuck
 
+**Two data sources available:**
+- **FBRef Scraper**: Comprehensive match statistics (may have 403 errors in GitHub Actions)
+- **Understat Scraper**: xG data and match statistics (more reliable in CI)
+
 See [docs/GITHUB_ACTIONS_SETUP.md](docs/GITHUB_ACTIONS_SETUP.md) for detailed instructions.
 
 ### Option 2: Run Locally
