@@ -1,0 +1,45 @@
+# Copy this file to ~/.dbt/profiles.yml and configure for your database
+
+football_analytics:
+  target: dev
+  outputs:
+    
+    # PostgreSQL example
+    dev:
+      type: postgres
+      host: localhost
+      user: your_username
+      password: your_password
+      port: 5432
+      dbname: football_analytics
+      schema: public
+      threads: 4
+      keepalives_idle: 0
+    
+    # Snowflake example
+    # dev:
+    #   type: snowflake
+    #   account: your_account
+    #   user: your_username
+    #   password: your_password
+    #   role: your_role
+    #   database: FOOTBALL_ANALYTICS
+    #   warehouse: COMPUTE_WH
+    #   schema: PUBLIC
+    #   threads: 4
+    
+    # BigQuery example
+    # dev:
+    #   type: bigquery
+    #   method: service-account
+    #   project: your_project_id
+    #   dataset: football_analytics
+    #   threads: 4
+    #   keyfile: /path/to/keyfile.json
+    
+    # DuckDB example (for local development)
+    # dev:
+    #   type: duckdb
+    #   path: ../data/football_analytics.duckdb
+    #   schema: main
+    #   threads: 4

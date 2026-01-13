@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw data loaded from scrapers
+    schema: raw  # Adjust based on your database
+    
+    tables:
+      - name: matches
+        description: Raw match data from web scrapers
+        columns:
+          - name: match_id
+            description: Unique identifier for the match
+            tests:
+              - unique
+              - not_null
+          
+          - name: match_date
+            description: Date the match was played
+            tests:
+              - not_null
+          
+          - name: home_team
+            description: Home team name
+            tests:
+              - not_null
+          
+          - name: away_team
+            description: Away team name
+            tests:
+              - not_null
+          
+          - name: home_score
+            description: Goals scored by home team
+          
+          - name: away_score
+            description: Goals scored by away team
+          
+          - name: competition
+            description: Competition/league name
+          
+          - name: season
+            description: Season identifier (e.g., 2025-26)

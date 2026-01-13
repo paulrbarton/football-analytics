@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: fct_team_performance
+    description: Team performance metrics aggregated by season and competition
+    columns:
+      - name: team
+        description: Team name
+        tests:
+          - not_null
+      
+      - name: season
+        description: Season identifier
+        tests:
+          - not_null
+      
+      - name: competition
+        description: Competition/league name
+        tests:
+          - not_null
+      
+      - name: matches_played
+        description: Total matches played
+        tests:
+          - not_null
+      
+      - name: wins
+        description: Number of wins
+      
+      - name: draws
+        description: Number of draws
+      
+      - name: losses
+        description: Number of losses
+      
+      - name: goals_scored
+        description: Total goals scored
+      
+      - name: goals_conceded
+        description: Total goals conceded
+      
+      - name: points
+        description: Total points (3 for win, 1 for draw)
+      
+      - name: goal_difference
+        description: Goals scored minus goals conceded
+      
+      - name: points_per_match
+        description: Average points per match
+      
+      - name: goals_per_match
+        description: Average goals scored per match
