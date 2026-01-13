@@ -19,14 +19,17 @@ data_transform/dbt_packages/
 data_transform/logs/
 data_transform/profiles.yml
 
-# Data files
+# Data files (local development)
 data/raw/*
 data/processed/*
+data/export/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
-*.csv
-*.json
-*.parquet
+!data/export/.gitkeep
+
+# But allow committed data for GitHub Actions upload
+!data/committed/**/*.csv
+!data/committed/**/*.parquet
 
 # IDEs
 .vscode/
