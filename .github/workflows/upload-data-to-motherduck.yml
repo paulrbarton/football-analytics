@@ -50,7 +50,7 @@ jobs:
           token = os.getenv('MOTHERDUCK_TOKEN')
           database = 'football_analytics'
           schema = 'raw'
-          file_pattern = '${{ github.event.inputs.file_pattern || "*" }}'
+          file_pattern = '${{ github.event.inputs.file_pattern || '*' }}'
           
           if not token:
               print("❌ MOTHERDUCK_TOKEN not set")
