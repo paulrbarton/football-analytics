@@ -23,13 +23,15 @@ def main():
     DATABASE = os.getenv('DATABASE_NAME', 'football_analytics')
     SCHEMA = os.getenv('SCHEMA_NAME', 'raw')
     SEASON = os.getenv('SEASON', '2025-2026')
+    RATE_LIMIT = float(os.getenv('SCRAPER_RATE_LIMIT', '8.0'))  # Higher for CI
     
     print(f"{'='*60}")
     print(f"Scraping all Premier League teams - {SEASON}")
     print(f"Destination: {DESTINATION}")
+    print(f"Rate limit: {RATE_LIMIT}s between requests")
     print(f"{'='*60}\n")
     
-    scraper = FBRefScraper(rate_limit=3.0)
+    scraper = FBRefScraper(rate_limit=RATE_LIMIT)
     
     # Scrape all teams
     all_df = scraper.scrape_premier_league_season(SEASON)

@@ -22,12 +22,12 @@ class FBRefScraper(BaseScraper):
         'miscellaneous': 'misc'
     }
 
-    def __init__(self, rate_limit: float = 3.0, verify_ssl: bool = False):
+    def __init__(self, rate_limit: float = 5.0, verify_ssl: bool = False):
         """
         Initialize FBRef scraper.
         
         Args:
-            rate_limit: Seconds between requests (default 3.0 for politeness)
+            rate_limit: Seconds between requests (default 5.0 for politeness, higher in CI)
             verify_ssl: Whether to verify SSL certificates (default False for compatibility)
         """
         super().__init__(base_url="https://fbref.com", rate_limit=rate_limit, verify_ssl=verify_ssl)
@@ -287,7 +287,10 @@ def main():
     # Load environment variables
     load_dotenv()
     
-    scraper = FBRefScraper(rate_limit=3.0)
+    # Get rate limit from environment (higher in CI to avoid blocking)
+    rate_limit = float(os.getenv('SCRAPER_RATE_LIMIT', '5.0'))
+    
+    scraper = FBRefScraper(rate_limit=rate_limit)
     
     # Configure destination: 'local', 'motherduck', or 'duckdb'
     DESTINATION = os.getenv('DATA_DESTINATION', 'local')  # default to local

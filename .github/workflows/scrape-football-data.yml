@@ -44,6 +44,7 @@ jobs:
           DATA_DESTINATION: motherduck
           DATABASE_NAME: football_analytics
           SCHEMA_NAME: raw
+          SCRAPER_RATE_LIMIT: '8'
         run: |
           cd data_collection/scrapers
           python fbref_scraper.py

@@ -24,28 +24,70 @@ class BaseScraper(ABC):
         self.rate_limit = rate_limit
         self.verify_ssl = verify_ssl
         self.session = requests.Session()
+        
+        # Use realistic browser headers to avoid blocking
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Cache-Control': 'max-age=0'
         })
+        
         # Disable SSL warnings when verification is off
         if not verify_ssl:
             import urllib3
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    def fetch_page(self, url: str) -> BeautifulSoup:
+    def fetch_page(self, url: str, max_retries: int = 3) -> BeautifulSoup:
         """
-        Fetch and parse a web page.
+        Fetch and parse a web page with retry logic.
         
         Args:
             url: URL to fetch
+            max_retries: Maximum number of retry attempts for 403/429 errors
             
         Returns:
             BeautifulSoup object of the page
         """
-        time.sleep(self.rate_limit)  # Rate limiting
-        response = self.session.get(url, verify=self.verify_ssl, timeout=30)
-        response.raise_for_status()
-        return BeautifulSoup(response.content, 'lxml')
+        for attempt in range(max_retries):
+            time.sleep(self.rate_limit)  # Rate limiting
+            
+            try:
+                response = self.session.get(url, verify=self.verify_ssl, timeout=30)
+                response.raise_for_status()
+                return BeautifulSoup(response.content, 'lxml')
+                
+            except requests.exceptions.HTTPError as e:
+                if response.status_code == 403:
+                    if attempt < max_retries - 1:
+                        # Exponential backoff for 403 errors
+                        wait_time = (attempt + 1) * 5
+                        print(f"    ⚠ 403 Forbidden, waiting {wait_time}s before retry {attempt + 2}/{max_retries}...")
+                        time.sleep(wait_time)
+                        continue
+                    else:
+                        raise requests.exceptions.HTTPError(
+                            f"403 Forbidden after {max_retries} attempts. "
+                            f"FBRef may be blocking automated requests. "
+                            f"Try: 1) Increase rate_limit, 2) Run from different IP, 3) Use residential proxy"
+                        )
+                elif response.status_code == 429:
+                    # Rate limited - wait longer
+                    wait_time = (attempt + 1) * 10
+                    if attempt < max_retries - 1:
+                        print(f"    ⚠ Rate limited (429), waiting {wait_time}s...")
+                        time.sleep(wait_time)
+                        continue
+                raise
+        
+        raise Exception(f"Failed to fetch {url} after {max_retries} attempts")
 
     @abstractmethod
     def scrape(self) -> pd.DataFrame:
